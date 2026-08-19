@@ -1,8 +1,10 @@
 import java.util.ArrayList;
+import java.util.Map;
 public class Player{
     static int level = 0;
     private int health;
-    private ArrayList<String> inventory = new ArrayList<>();
+    private Weapon weapon;
+    private Map<String, Integer> inventory = new Hashmap<>();
     private double xcoord;
     private double ycoord;
 
