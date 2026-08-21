@@ -9,8 +9,9 @@ public class Weapon {
         this.recipe = recipe;
         this.damage = damage;
     }
-    public void craftWeapon(HashMap<String, Integer> recipe){
-        
+    public int getDamage(){
+        return this.damage;
     }
+
     
 }
