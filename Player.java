@@ -5,6 +5,8 @@ public class Player{
     static int level = 0;
     private int health;
     private Weapon weapon;
+    private Map<String, Integer> inventory = new HashMap<>();
+    private Map<Weapon ,Integer> weaapons = new HashMap<>();
     private double xcoord;
     private double ycoord;
 

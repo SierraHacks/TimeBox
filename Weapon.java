@@ -9,7 +9,7 @@ public class Weapon {
         this.recipe = recipe;
         this.damage = damage;
     }
-    public static void craftWeapon(HashMap<String, Integer> recipe){
+    public void craftWeapon(HashMap<String, Integer> recipe){
         
     }
     
