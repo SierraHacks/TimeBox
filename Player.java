@@ -1,10 +1,13 @@
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
 public class Player{
     static int level = 0;
     private int health;
     private Weapon weapon;
+    private Map<String, Integer> inventory = new HashMap<>();
+    private List<Weapon> weapons = new ArrayList<>();
     private double xcoord;
     private double ycoord;
 
@@ -14,14 +17,21 @@ public class Player{
         this.xcoord = xcoord;
         this.ycoord = ycoord;
     }
-    public void attack(){
-        // returns attack damage based on equipped weapons
+    public int attack(){
+        return 5+this.weapon.getDamage();
     }
-    public void takeDamage(){
-        //take damage based on enemy strength, no damage if block
+    public void takeDamage(int damage, boolean block){
+        if(!block){
+            this.health -= damage;
+        }
     }
     public void craft(){
         //figure out crafting logic based on inventory
+    }
+    public void equipWeapon(Weapon weapon){
+        if(this.weapons.contains(weapon)){
+            this.weapon = weapon;
+        }
     }
 
 }
