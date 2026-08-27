@@ -31,12 +31,12 @@ public class Player {
         }
     }
 
-    public void getxcoord(double xcoord) {
-        this.xcoord = xcoord;
+    public static getxcoord() {
+        return xcoord;
     }
 
-    public void getycoord(double ycoord){
-        this.ycoord = ycoord;
+    public static getycoord(){
+        return ycoord;
     }
 
     private static Weapon weaponCheck(String weaponChoice) {

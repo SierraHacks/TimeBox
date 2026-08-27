@@ -8,10 +8,11 @@ import java.awt.event.KeyEvent;
 import java.util.Map;
 
 public class main {
+    static Player player;
     public static class MoveAction extends AbstractAction {
         private int dx;
         private int dy;
-        private int playerX;
+        private int playerX = player.getxcoord(double xcoord);
         private int playerY;
 
         public MoveAction(int dx, int dy) {
