@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 public class main {
     public static void createAndShowGUI(){
         JFrame frame = new JFrame("Time Box");
+        Player player = new Player(100,0,0);
 
         // Add title
         JLabel title = new JLabel("Time Box", SwingConstants.CENTER);
@@ -18,20 +19,7 @@ public class main {
 
         // Add panel in center of frame
         JPanel center = new JPanel(new BorderLayout());
-        center.setPreferredSize(new Dimension(1000,1000));
-        center.setBackground(Color.white);
-        frame.getContentPane().add(center, BorderLayout.CENTER);
-
-        //Show the frame
-        frame.pack();
-        frame.setVisible(true);
-    }
-    public static void main(String[] args) { 
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            public void run(){
-                createAndShowGUI();
-            }
-        });
+        center.setBackground(Color.cyan);
 
     }
   
