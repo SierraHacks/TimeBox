@@ -1,5 +1,6 @@
 import java.awt.*;
 import javax.swing.*;
+import java.awt.event.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
@@ -21,11 +22,27 @@ public class main {
         title.setBackground(Color.decode("#f0e9e9"));
         frame.add(title, BorderLayout.PAGE_START);
 
-        // Add panel in center of frame (using JLayeredPane or a Panel with null layout if you want free positioning inside)
-        // For simplicity, let's use a standard JPanel with null layout *only* for the center container if you want absolute positioning inside it.
-        JPanel center = new JPanel(null);
-        center.setBackground(Color.white);
-        frame.add(center, BorderLayout.CENTER);
+        // Adds a flow panel at center of screen
+        JPanel pane = new JPanel(new FlowLayout());
+        pane.setPreferredSize(new Dimension(300, 400));
+        pane.setBackground(Color.WHITE);
+        pane.setOpaque(true);
+        frame.getContentPane().add(pane, BorderLayout.CENTER);
+
+        // Add Start and Quit Button
+        JButton start = new JButton("Start");
+        JButton quit = new JButton("Quit");
+
+        //Adjust size and color of start button
+        start.setPreferredSize(new Dimension(100, 30));
+        start.setBackground(Color.green);
+
+        // Adjust the size and color of the stop button
+        quit.setPreferredSize(new Dimension(75, 25));
+        quit.setBackground(Color.red);
+
+        pane.add(start);
+        pane.add(quit);
 
         // Inventory Panel
         JPanel inventory = new JPanel();
@@ -35,7 +52,7 @@ public class main {
         inventory.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
         
         inventory.add(inventoryTitle);
-        center.add(inventory); // Add inventory to the center panel, not the frame directly
+        pane.add(inventory); // Add inventory to the center panel, not the frame directly
 
         // Inventory visibility toggle
         inventory.setVisible(false);
@@ -45,15 +62,7 @@ public class main {
         frame.setVisible(true);
 
         // KEY BINDINGS
-        inventoryKeyBinding(inventory, center);
-    }
-
-    public static void main(String[] args) { 
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                createAndShowGUI();
-            }
-        });
+        inventoryKeyBinding(inventory, pane);
     }
 
     public static void inventoryKeyBinding(JPanel inventory, JPanel center) {
@@ -70,6 +79,15 @@ public class main {
         center.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_C,0), "toggleInventory");
         center.getActionMap().put("toggleInventory", displayInventory);
     }
+    public static void main(String[] args) { 
+        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                createAndShowGUI();
+            }
+        });
+    }
+
+    
 
 
 }
