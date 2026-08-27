@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import java.util.HashMap;
@@ -56,6 +57,10 @@ public class Player {
         if (this.weapons.contains(weapon)) {
             this.weapon = weapon;
         }
+    }
+
+    public Map<String, Integer> getInventory() {
+        return Collections.unmodifiableMap(this.inventory);
     }
 
 }

@@ -3,8 +3,10 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.Map;
 
 public class main {
+    static Player player;
     public static void createAndShowGUI() {
         JFrame frame = new JFrame("Time Box");
         frame.setSize(600, 500);
@@ -64,15 +66,19 @@ public class main {
         // KEY BINDINGS
         inventoryKeyBinding(inventory, pane);
     }
-
+    // inventory toggle upon pressing "c" key
     public static void inventoryKeyBinding(JPanel inventory, JPanel center) {
         Action displayInventory = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 boolean visible = inventory.isVisible();
+                Map<String, Integer> playerInventory = player.getInventory();
+                inventory.removeAll();
+                for(String key: playerInventory.keySet()){
+                    inventory.add(new JLabel(key + "x " + playerInventory.get(key)));
+                }
                 inventory.setVisible(!visible);
                 inventory.repaint();
-                //update to accurately reflect player inventory
             }
         };
         
@@ -82,6 +88,7 @@ public class main {
     public static void main(String[] args) { 
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
+                player = new Player(100,0,0);
                 createAndShowGUI();
             }
         });
