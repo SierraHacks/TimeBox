@@ -30,6 +30,14 @@ public class Player {
         }
     }
 
+    public void getxcoord(double xcoord) {
+        this.xcoord = xcoord;
+    }
+
+    public void getycoord(double ycoord){
+        this.ycoord = ycoord;
+    }
+
     private static Weapon weaponCheck(String weaponChoice) {
         for (int i = 0; i < Weapon.weaponList.size(); i++) {
             Weapon w = Weapon.weaponList.get(i);

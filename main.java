@@ -5,6 +5,25 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
 public class main {
+    public static class MoveAction extends AbstractAction {
+        private int dx;
+        private int dy;
+        private int playerX;
+        private int playerY;
+
+        public MoveAction(int dx, int dy) {
+            this.dx = dx;
+            this.dy = dy;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            playerX += dx;
+            playerY += dy;
+            
+        }
+
+    }
     public static void createAndShowGUI() {
         JFrame frame = new JFrame("Time Box");
         frame.setSize(600, 500);
@@ -62,7 +81,23 @@ public class main {
         frame.setVisible(true);
 
         // KEY BINDINGS
+        setupPlayerBindings();
         inventoryKeyBinding(inventory, pane);
+    }
+    
+
+    public static void setupPlayerBindings(){
+        InputMap playerInputMap = new JPanel().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        ActionMap playerActionMap = new JPanel().getActionMap();
+        playerInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP,0), "moveUp");
+        playerInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN,0), "moveDown");
+        playerInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT,0), "moveLeft");
+        playerInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT,0), "moveRight");
+
+        playerActionMap.put("moveUp", new MoveAction(0, -1));
+        playerActionMap.put("moveDown", new MoveAction(0, 1));
+        playerActionMap.put("moveLeft", new MoveAction(-1, 0));
+        playerActionMap.put("moveRight", new MoveAction(1, 0));
     }
 
     public static void inventoryKeyBinding(JPanel inventory, JPanel center) {
