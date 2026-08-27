@@ -31,12 +31,12 @@ public class Player {
         }
     }
 
-    public static getxcoord() {
-        return xcoord;
+    public void setxcoord(int new_xcoord) {
+        this.xcoord = new_xcoord;
     }
 
-    public static getycoord(){
-        return ycoord;
+    public void setycoord(int new_ycoord){
+        this.ycoord = new_ycoord;
     }
 
     private static Weapon weaponCheck(String weaponChoice) {

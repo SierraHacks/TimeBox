@@ -12,7 +12,7 @@ public class main {
     public static class MoveAction extends AbstractAction {
         private int dx;
         private int dy;
-        private int playerX = player.getxcoord(double xcoord);
+        private int playerX;
         private int playerY;
 
         public MoveAction(int dx, int dy) {
@@ -24,6 +24,8 @@ public class main {
         public void actionPerformed(ActionEvent e) {
             playerX += dx;
             playerY += dy;
+            player.setxcoord(playerX);
+            player.setycoord(playerY);
             
         }
 
