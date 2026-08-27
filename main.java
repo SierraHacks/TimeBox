@@ -9,6 +9,7 @@ import java.util.Map;
 
 public class main {
     static Player player;
+    
     public static class MoveAction extends AbstractAction {
         private int dx;
         private int dy;

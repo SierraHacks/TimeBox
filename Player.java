@@ -4,6 +4,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.HashMap;
 import java.util.List;
+import java.awt.Image;
+import javax.swing.ImageIcon;
+import java.awt.image.BufferedImage;
 
 public class Player {
     static int level = 0;
@@ -13,6 +16,8 @@ public class Player {
     private List<Weapon> weapons = new ArrayList<>();
     private double xcoord;
     private double ycoord;
+    private BufferedImage walkingLeft, walkingRight, walkingUp, walkingDown, idleUp, idleDown;
+    
 
     // figure out weapons/crafting
     public Player(int health, int xcoord, int ycoord) {
