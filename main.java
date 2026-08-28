@@ -49,7 +49,7 @@ public class main {
 
         // Add title
         JLabel title = new JLabel("Time Box", SwingConstants.CENTER);
-        Font heading = new Font("Serif", Font.BOLD, 20); // "Times Roman" is better written as "Serif" in Java
+        Font heading = new Font("Serif", Font.BOLD, 20);
         title.setFont(heading);
         title.setPreferredSize(new Dimension(300, 50));
         title.setOpaque(true);
@@ -102,7 +102,7 @@ public class main {
         inventory.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
 
         inventory.add(inventoryTitle);
-        pane.add(inventory); // Add inventory to the center panel, not the frame directly
+        pane.add(inventory); 
 
         // Inventory visibility toggle
         inventory.setVisible(false);
@@ -113,7 +113,7 @@ public class main {
         craft.setName("craft");
         JLabel craftTitle = new JLabel("Crafting", SwingConstants.CENTER);
         craft.add(craftTitle, BorderLayout.NORTH);
-        craft.setPreferredSize(new Dimension(100, 100));
+        craft.setPreferredSize(new Dimension(250, 200));
         craft.add(status, BorderLayout.SOUTH);
         craft.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
         craft.setVisible(false);
@@ -188,11 +188,13 @@ public class main {
                 craft.add(craftTitle, BorderLayout.NORTH);
 
                 craft.add(status, BorderLayout.SOUTH);
-                JPanel weaponGrid = new JPanel(new GridLayout());
+                JPanel weaponGrid = new JPanel(new GridLayout(0,1));
                 for (Weapon w : Weapon.weaponList) {
                     JButton weapon = new JButton(w.getName());
                     weaponCraft(weapon, craft, status);
+                    weapon.setMaximumSize(new Dimension(50, 30));
                     weaponGrid.add(weapon);
+                    weaponGrid.add(Box.createRigidArea(new Dimension(0, 5)));
                 }
                 craft.add(weaponGrid, BorderLayout.CENTER);
                 craft.setVisible(true);
@@ -225,6 +227,7 @@ public class main {
     public static void main(String[] args) {
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
+                Weapon.initWeapons();
                 player = new Player(100, 0, 0);
                 createAndShowGUI();
             }

@@ -71,14 +71,18 @@ public class Player {
         }
     }
 
-    public ImageIcon getActiveSprite() {
-        return switch (direction) {
-            case "up"    -> moving_upSprite;
-            case "left"  -> moving_leftSprite;
-            case "right" -> moving_rightSprite;
-            default      -> moving_downSprite;
-        };
+public ImageIcon getActiveSprite() {
+    switch (direction) {
+        case "up":
+            return moving_upSprite;
+        case "left":
+            return moving_leftSprite;
+        case "right":
+            return moving_rightSprite;
+        default:
+            return moving_downSprite;
     }
+}
 
     public int attack() {
         return 5 + this.weapon.getDamage();
@@ -164,4 +168,9 @@ public class Player {
     public ArrayList<Weapon> getWeapons(){
         return this.weapons;
     }
+
+    public void updateInventory(String key, int add){
+        this.inventory.put(key, this.inventory.get(key)+add);
+    }
+
 }
