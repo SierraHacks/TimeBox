@@ -9,27 +9,36 @@ public class main {
     static Player player;
 
     public static class MoveAction extends AbstractAction {
-        private int dx;
-        private int dy;
-        private int playerX;
-        private int playerY;
+        private final int dx;
+        private final int dy;
+        private final String direction;
+        private final Player player; // Reference to the actual player in your game
+        private final JPanel pane;
+        
 
-        public MoveAction(int dx, int dy) {
-            this.dx = dx;
-            this.dy = dy;
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            playerX += dx;
-            playerY += dy;
-            player.setxcoord(playerX);
-            player.setycoord(playerY);
-
-        }
-
+    public MoveAction(JPanel pane, Player player, int dx, int dy, String direction) {
+        this.pane = pane;
+        this.player = player;
+        this.dx = dx;
+        this.dy = dy;
+        this.direction = direction;
     }
 
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        // 1. Get the current position directly from the player object
+        
+        
+        // 2. Calculate new positions and update the player object
+        player.setxcoord(player.getX()  + dx);
+        player.setycoord(player.getY() + dy);
+
+        player.setDirection(direction);
+
+        pane.repaint(); 
+    }
+
+    }
     public static void createAndShowGUI() {
         JFrame frame = new JFrame("Time Box");
         frame.setSize(600, 500);
@@ -48,7 +57,21 @@ public class main {
         frame.add(title, BorderLayout.PAGE_START);
 
         // Adds a flow panel at center of screen
-        JPanel pane = new JPanel(new FlowLayout());
+        final JPanel pane = new JPanel(new FlowLayout()) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g); 
+                
+                // Ensure the player object exists and has an active GIF loaded
+                if (player != null && player.getActiveSprite() != null) {
+                    ImageIcon sprite = player.getActiveSprite();
+                    
+                    // FIXED: Changed 'this' to 'pane' to fix the drawImage type mismatch error
+                    // NOTE: If player uses getxcoord() instead of getX(), change player.getX() below to player.getxcoord()
+                    g.drawImage(sprite.getImage(), player.getX(), player.getY(), 40, 40, this);
+                }
+            }
+        };
         pane.setPreferredSize(new Dimension(300, 400));
         pane.setBackground(Color.WHITE);
         pane.setOpaque(true);
@@ -100,7 +123,7 @@ public class main {
         frame.setVisible(true);
 
         // KEY BINDINGS
-        setupPlayerBindings();
+        setupPlayerBindings(pane, player);
         inventoryKeyBinding(inventory, pane);
         craftButtonKey(craft, status, pane);
     }
@@ -133,19 +156,24 @@ public class main {
         center.getActionMap().put("toggleInventory", displayInventory);
     }
 
-    public static void setupPlayerBindings() {
-        InputMap playerInputMap = new JPanel().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-        ActionMap playerActionMap = new JPanel().getActionMap();
-        playerInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), "moveUp");
-        playerInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), "moveDown");
-        playerInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), "moveLeft");
-        playerInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), "moveRight");
+    public static void setupPlayerBindings(JPanel pane, Player player) { 
+    // Bind to the real panel's maps, not a "new JPanel()"
+    InputMap playerInputMap = pane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+    ActionMap playerActionMap = pane.getActionMap(); 
 
-        playerActionMap.put("moveUp", new MoveAction(0, -1));
-        playerActionMap.put("moveDown", new MoveAction(0, 1));
-        playerActionMap.put("moveLeft", new MoveAction(-1, 0));
-        playerActionMap.put("moveRight", new MoveAction(1, 0));
-    }
+    // Define keystrokes
+    playerInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), "moveUp");
+    playerInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), "moveDown");
+    playerInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), "moveLeft");
+    playerInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), "moveRight");
+
+    // Pass the player object and step-speed (e.g., 5 pixels per press) to MoveAction
+    int movementSpeed = 5;
+    playerActionMap.put("moveUp",    new MoveAction(pane, player, 0, -movementSpeed, "up"));
+        playerActionMap.put("moveDown",  new MoveAction(pane, player, 0, movementSpeed, "down"));
+        playerActionMap.put("moveLeft",  new MoveAction(pane, player, -movementSpeed, 0, "left"));
+        playerActionMap.put("moveRight", new MoveAction(pane, player, movementSpeed, 0, "right"));
+}
 
     public static void craftButtonKey(JPanel craft, JLabel status, JPanel pane) {
         Action openCraftMenu = new AbstractAction() {

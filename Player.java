@@ -1,12 +1,9 @@
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
-import java.util.Set;
 import java.util.HashMap;
-import java.util.List;
-import java.awt.Image;
+import java.net.URL;
 import javax.swing.ImageIcon;
-import java.awt.image.BufferedImage;
 
 public class Player {
     static int level = 0;
@@ -14,16 +11,73 @@ public class Player {
     private Weapon weapon;
     private Map<String, Integer> inventory = new HashMap<>();
     private ArrayList<Weapon> weapons = new ArrayList<>();
+    
+    // Kept as doubles for precise movement accumulation if needed
     private double xcoord;
     private double ycoord;
-    private BufferedImage walkingLeft, walkingRight, walkingUp, walkingDown, idleUp, idleDown;
     
+    private boolean movingLeft = false;
+    private boolean movingRight = false;
+    private boolean movingUp = false;
+    private boolean movingDown = false;
+    private double speed = 5;
+    private String direction = "down";
+    
+    private ImageIcon moving_upSprite;
+    private ImageIcon moving_downSprite;
+    private ImageIcon moving_leftSprite;
+    private ImageIcon moving_rightSprite;
+    private ImageIcon idle_upSprite;
+    private ImageIcon idle_downSprite;
+    private ImageIcon idle_leftSprite;
+    private ImageIcon idle_rightSprite;
 
-    // figure out weapons/crafting
     public Player(int health, int xcoord, int ycoord) {
         this.health = health;
         this.xcoord = xcoord;
         this.ycoord = ycoord;
+        
+        // FIXED: You must call loadSprites inside the constructor, 
+        // otherwise your sprites stay null!
+        loadSprites(); 
+    }
+
+    public void update() {
+        if (movingLeft) xcoord -= speed;
+        if (movingRight) xcoord += speed;
+        if (movingUp) ycoord -= speed;
+        if (movingDown) ycoord += speed;
+    }
+
+    private void loadSprites(){
+        // FIXED: Added a leading "/" to all paths so Java looks in the root resource directory
+        idle_rightSprite   = loadImage("/movement sprites/char_idle_right_anim.gif");
+        moving_rightSprite = loadImage("/movement sprites/char_run_right_anim.gif");
+        idle_leftSprite    = loadImage("/movement sprites/char_idle_right_anim.gif");
+        moving_leftSprite  = loadImage("/movement sprites/char_run_left_anim.gif");
+        idle_upSprite      = loadImage("/movement sprites/char_idle_up_anim.gif");
+        moving_upSprite    = loadImage("/movement sprites/char_run_up_anim.gif");
+        idle_downSprite    = loadImage("/movement sprites/char_idle_down_anim.gif");
+        moving_downSprite  = loadImage("/movement sprites/char_run_down_anim.gif");
+    }
+
+    private ImageIcon loadImage(String path) {
+        URL imgUrl = getClass().getResource(path);
+        if (imgUrl != null) {
+            return new ImageIcon(imgUrl);
+        } else {
+            System.err.println("Error: Could not find GIF asset at " + path);
+            return null;
+        }
+    }
+
+    public ImageIcon getActiveSprite() {
+        return switch (direction) {
+            case "up"    -> moving_upSprite;
+            case "left"  -> moving_leftSprite;
+            case "right" -> moving_rightSprite;
+            default      -> moving_downSprite;
+        };
     }
 
     public int attack() {
@@ -36,46 +90,62 @@ public class Player {
         }
     }
 
-    public void setxcoord(int new_xcoord) {
-        this.xcoord = new_xcoord;
+    // FIXED: Cast the double coordinates to integers here.
+    // This allows g.drawImage(..., player.getX(), player.getY(), ...) to compile flawlessly!
+    public int getX() { 
+        return (int) xcoord; 
     }
 
-    public void setycoord(int new_ycoord){
-        this.ycoord = new_ycoord;
+    public int getY() { 
+        return (int) ycoord; 
     }
 
+    public void setDirection(String direction) { 
+        this.direction = direction; 
+    }
 
-    private boolean craftHelper(Weapon w) { 
-        if (this.inventory.keySet().containsAll(w.getRecipe().keySet())) { 
+    public void setxcoord(double new_xcoord) { 
+        this.xcoord = new_xcoord; 
+    }
+
+    public void setycoord(double new_ycoord){ 
+        this.ycoord = new_ycoord; 
+    }
+
+    public void setMovingLeft(boolean moving)   { this.movingLeft = moving; }
+    public void setMovingRight(boolean moving)  { this.movingRight = moving; }
+    public void setMovingUp(boolean moving)     { this.movingUp = moving; }
+    public void setMovingDown(boolean moving)   { this.movingDown = moving; }
+
+    private boolean craftHelper(Weapon w) {
+        if (this.inventory.keySet().containsAll(w.getRecipe().keySet())) {
             for (String key : w.getRecipe().keySet()) {
                 boolean matreq = this.inventory.get(key) - w.getRecipe().get(key) >= 0;
-                if(matreq == false){
+                if(!matreq){
                     return false;
                 }
-                
             }
             for (String key : w.getRecipe().keySet()) {
                 this.inventory.put(key, this.inventory.get(key) - w.getRecipe().get(key));
             }
-            this.weapons.add(w); 
-            return true; 
-        } 
-        return false; 
-
-}
-private static Weapon weaponRetrieve(String weaponChoice) {
-    for (int i = 0; i < Weapon.weaponList.size(); i++) {
-        Weapon w = Weapon.weaponList.get(i);
-
-        if (weaponChoice.equals(w.getName())) {
-            return w;
+            this.weapons.add(w);
+            return true;
         }
+        return false;
     }
 
-    return null;
-}
+    private static Weapon weaponRetrieve(String weaponChoice) {
+        for (int i = 0; i < Weapon.weaponList.size(); i++) {
+            Weapon w = Weapon.weaponList.get(i);
+            if (weaponChoice.equals(w.getName())) {
+                return w;
+            }
+        }
+        return null;
+    }
+
     public boolean craft(String wName){
-        if(this.weaponRetrieve(wName) != null){
+        if(weaponRetrieve(wName) != null){
             return this.craftHelper(weaponRetrieve(wName));
         }
         return false;
@@ -94,5 +164,4 @@ private static Weapon weaponRetrieve(String weaponChoice) {
     public ArrayList<Weapon> getWeapons(){
         return this.weapons;
     }
-
 }
