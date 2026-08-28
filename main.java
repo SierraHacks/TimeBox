@@ -93,25 +93,23 @@ public class main {
                 }
             }
         };
-        pane.setPreferredSize(new Dimension(300, 400));
-        pane.setBackground(Color.WHITE);
-        pane.setOpaque(true);
+        pane.setPreferredSize(new Dimension(1280, 720));
+        frame.add(pane);
+        pane.setOpaque(false);
+        try {
+            JPanelWithBackground background = new JPanelWithBackground("Dragons Arena.png");
+                background.setLayout(new BorderLayout());
+                background.add(pane, BorderLayout.CENTER);
+                frame.setContentPane(background);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        frame.setResizable(false);
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
         frame.getContentPane().add(pane, BorderLayout.CENTER);
-
-        // Add Start and Quit Button
-        JButton start = new JButton("Start");
-        JButton quit = new JButton("Quit");
-
-        // Adjust size and color of start button
-        start.setPreferredSize(new Dimension(100, 30));
-        start.setBackground(Color.green);
-
-        // Adjust the size and color of the stop button
-        quit.setPreferredSize(new Dimension(75, 25));
-        quit.setBackground(Color.red);
-
-        pane.add(start);
-        pane.add(quit);
 
         // Inventory Panel
         JPanel inventory = new JPanel();
