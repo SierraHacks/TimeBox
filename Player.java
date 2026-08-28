@@ -13,7 +13,7 @@ public class Player {
     private int health;
     private Weapon weapon;
     private Map<String, Integer> inventory = new HashMap<>();
-    private List<Weapon> weapons = new ArrayList<>();
+    private ArrayList<Weapon> weapons = new ArrayList<>();
     private double xcoord;
     private double ycoord;
     private BufferedImage walkingLeft, walkingRight, walkingUp, walkingDown, idleUp, idleDown;
@@ -44,26 +44,41 @@ public class Player {
         this.ycoord = new_ycoord;
     }
 
-    private static Weapon weaponCheck(String weaponChoice) {
-        for (int i = 0; i < Weapon.weaponList.size(); i++) {
-            Weapon w = Weapon.weaponList.get(i);
-            if (weaponChoice.equals(w.getName())) {
-                return w;
+
+    private boolean craftHelper(Weapon w) { 
+        if (this.inventory.keySet().containsAll(w.getRecipe().keySet())) { 
+            for (String key : w.getRecipe().keySet()) {
+                boolean matreq = this.inventory.get(key) - w.getRecipe().get(key) >= 0;
+                if(matreq == false){
+                    return false;
+                }
+                
             }
+            for (String key : w.getRecipe().keySet()) {
+                this.inventory.put(key, this.inventory.get(key) - w.getRecipe().get(key));
+            }
+            this.weapons.add(w); 
+            return true; 
+        } 
+        return false; 
+
+}
+private static Weapon weaponRetrieve(String weaponChoice) {
+    for (int i = 0; i < Weapon.weaponList.size(); i++) {
+        Weapon w = Weapon.weaponList.get(i);
+
+        if (weaponChoice.equals(w.getName())) {
+            return w;
         }
-        return null;
     }
 
-    public void craft(Weapon w) {
-        if (Player.weaponCheck(w.getName()) != null) {
-            if (this.inventory.keySet().containsAll(w.getRecipe().keySet())) {
-                this.weapons.add(w);
-                for (String key : w.getRecipe().keySet()) {
-                    this.inventory.put(key, this.inventory.get(key) - w.getRecipe().get(key));
-                }
-                this.weapons.add(w);
-            }
+    return null;
+}
+    public boolean craft(String wName){
+        if(this.weaponRetrieve(wName) != null){
+            return this.craftHelper(weaponRetrieve(wName));
         }
+        return false;
     }
 
     public void equipWeapon(Weapon weapon) {
@@ -74,6 +89,10 @@ public class Player {
 
     public Map<String, Integer> getInventory() {
         return Collections.unmodifiableMap(this.inventory);
+    }
+
+    public ArrayList<Weapon> getWeapons(){
+        return this.weapons;
     }
 
 }
