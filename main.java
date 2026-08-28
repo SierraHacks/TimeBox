@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class main {
     static Player player;
-    
+
     public static class MoveAction extends AbstractAction {
         private int dx;
         private int dy;
@@ -25,10 +25,11 @@ public class main {
             playerY += dy;
             player.setxcoord(playerX);
             player.setycoord(playerY);
-            
+
         }
 
     }
+
     public static void createAndShowGUI() {
         JFrame frame = new JFrame("Time Box");
         frame.setSize(600, 500);
@@ -72,7 +73,8 @@ public class main {
         JPanel inventory = new JPanel();
         inventory.setLayout(new BoxLayout(inventory, BoxLayout.Y_AXIS));
         inventory.setBackground(Color.WHITE);
-        JLabel inventoryTitle = new JLabel("Inventory");
+        JLabel inventoryTitle = new JLabel("Inventory", SwingConstants.CENTER);
+        inventoryTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
         inventory.setPreferredSize(new Dimension(200, 150));
         inventory.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
 
@@ -86,7 +88,8 @@ public class main {
         JPanel craft = new JPanel(new BorderLayout());
         JLabel status = new JLabel("");
         craft.setName("craft");
-        craft.add(new JLabel("Crafting"), BorderLayout.NORTH);
+        JLabel craftTitle = new JLabel("Crafting", SwingConstants.CENTER);
+        craft.add(craftTitle, BorderLayout.NORTH);
         craft.setPreferredSize(new Dimension(100, 100));
         craft.add(status, BorderLayout.SOUTH);
         craft.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
@@ -99,8 +102,9 @@ public class main {
         // KEY BINDINGS
         setupPlayerBindings();
         inventoryKeyBinding(inventory, pane);
-        craftButtonKey(craft,status);
+        craftButtonKey(craft, status, pane);
     }
+
     // inventory toggle upon pressing "c" key
     public static void inventoryKeyBinding(JPanel inventory, JPanel center) {
         Action displayInventory = new AbstractAction() {
@@ -109,7 +113,8 @@ public class main {
                 boolean visible = inventory.isVisible();
                 Map<String, Integer> playerInventory = player.getInventory();
                 inventory.removeAll();
-                JLabel inventoryTitle = new JLabel("Inventory");
+                JLabel inventoryTitle = new JLabel("Inventory", SwingConstants.CENTER);
+                inventoryTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
                 inventory.add(inventoryTitle);
                 for (String key : playerInventory.keySet()) {
                     inventory.add(new JLabel(key + " x" + playerInventory.get(key)));
@@ -128,29 +133,32 @@ public class main {
         center.getActionMap().put("toggleInventory", displayInventory);
     }
 
-    public static void setupPlayerBindings(){
+    public static void setupPlayerBindings() {
         InputMap playerInputMap = new JPanel().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
         ActionMap playerActionMap = new JPanel().getActionMap();
-        playerInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP,0), "moveUp");
-        playerInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN,0), "moveDown");
-        playerInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT,0), "moveLeft");
-        playerInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT,0), "moveRight");
+        playerInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), "moveUp");
+        playerInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), "moveDown");
+        playerInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), "moveLeft");
+        playerInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), "moveRight");
 
         playerActionMap.put("moveUp", new MoveAction(0, -1));
         playerActionMap.put("moveDown", new MoveAction(0, 1));
         playerActionMap.put("moveLeft", new MoveAction(-1, 0));
         playerActionMap.put("moveRight", new MoveAction(1, 0));
     }
-    public static void craftButtonKey(JPanel craft, JLabel status) {
+
+    public static void craftButtonKey(JPanel craft, JLabel status, JPanel pane) {
         Action openCraftMenu = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(craft.isVisible()){
+                if (craft.isVisible()) {
                     craft.setVisible(false);
                     return;
                 }
                 craft.removeAll();
-                craft.add(new JLabel("Crafting"), BorderLayout.NORTH);
+                JLabel craftTitle = new JLabel("Crafting", SwingConstants.CENTER);
+                craft.add(craftTitle, BorderLayout.NORTH);
+
                 craft.add(status, BorderLayout.SOUTH);
                 JPanel weaponGrid = new JPanel(new GridLayout());
                 for (Weapon w : Weapon.weaponList) {
@@ -164,9 +172,9 @@ public class main {
                 craft.repaint();
             }
         };
-        craft.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_C, 0), "openCraft");
+        pane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_C, 0), "openCraft");
 
-        craft.getActionMap()
+        pane.getActionMap()
                 .put("openCraft", openCraftMenu);
     };
 
@@ -177,7 +185,8 @@ public class main {
                 if (player.craft(button.getText())) {
                     stat.setText("Successfully crafted a " + button.getText());
                 } else {
-                    stat.setText("Craft Failed. You either lack the materials to craft a " + button.getText() + " or already possess one.");
+                    stat.setText("Craft Failed. You either lack the materials to craft a " + button.getText()
+                            + " or already possess one.");
                 }
                 c.repaint();
                 c.revalidate();
