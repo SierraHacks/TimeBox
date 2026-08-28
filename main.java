@@ -14,31 +14,30 @@ public class main {
         private final String direction;
         private final Player player; // Reference to the actual player in your game
         private final JPanel pane;
-        
 
-    public MoveAction(JPanel pane, Player player, int dx, int dy, String direction) {
-        this.pane = pane;
-        this.player = player;
-        this.dx = dx;
-        this.dy = dy;
-        this.direction = direction;
-    }
+        public MoveAction(JPanel pane, Player player, int dx, int dy, String direction) {
+            this.pane = pane;
+            this.player = player;
+            this.dx = dx;
+            this.dy = dy;
+            this.direction = direction;
+        }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        // 1. Get the current position directly from the player object
-        
-        
-        // 2. Calculate new positions and update the player object
-        player.setxcoord(player.getX()  + dx);
-        player.setycoord(player.getY() + dy);
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            // 1. Get the current position directly from the player object
 
-        player.setDirection(direction);
+            // 2. Calculate new positions and update the player object
+            player.setxcoord(player.getX() + dx);
+            player.setycoord(player.getY() + dy);
 
-        pane.repaint(); 
-    }
+            player.setDirection(direction);
+
+            pane.repaint();
+        }
 
     }
+
     public static void createAndShowGUI() {
         JFrame frame = new JFrame("Time Box");
         frame.setSize(600, 500);
@@ -60,21 +59,28 @@ public class main {
         final JPanel pane = new JPanel(new FlowLayout()) {
             @Override
             protected void paintComponent(Graphics g) {
-                super.paintComponent(g); 
-                
+                super.paintComponent(g);
+
                 // Ensure the player object exists and has an active GIF loaded
                 if (player != null && player.getActiveSprite() != null) {
                     ImageIcon sprite = player.getActiveSprite();
-                    
+
                     // FIXED: Changed 'this' to 'pane' to fix the drawImage type mismatch error
-                    // NOTE: If player uses getxcoord() instead of getX(), change player.getX() below to player.getxcoord()
+                    // NOTE: If player uses getxcoord() instead of getX(), change player.getX()
+                    // below to player.getxcoord()
                     g.drawImage(sprite.getImage(), player.getX(), player.getY(), 40, 40, this);
                 }
             }
         };
-        pane.setPreferredSize(new Dimension(300, 400));
+        pane.setPreferredSize(new Dimension(1280, 720));
+        frame.add(pane);
         pane.setBackground(Color.WHITE);
         pane.setOpaque(true);
+
+        frame.setResizable(false);
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
         frame.getContentPane().add(pane, BorderLayout.CENTER);
 
         // Add Start and Quit Button
@@ -102,7 +108,7 @@ public class main {
         inventory.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
 
         inventory.add(inventoryTitle);
-        pane.add(inventory); 
+        pane.add(inventory);
 
         // Inventory visibility toggle
         inventory.setVisible(false);
@@ -156,24 +162,25 @@ public class main {
         center.getActionMap().put("toggleInventory", displayInventory);
     }
 
-    public static void setupPlayerBindings(JPanel pane, Player player) { 
-    // Bind to the real panel's maps, not a "new JPanel()"
-    InputMap playerInputMap = pane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-    ActionMap playerActionMap = pane.getActionMap(); 
+    public static void setupPlayerBindings(JPanel pane, Player player) {
+        // Bind to the real panel's maps, not a "new JPanel()"
+        InputMap playerInputMap = pane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        ActionMap playerActionMap = pane.getActionMap();
 
-    // Define keystrokes
-    playerInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), "moveUp");
-    playerInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), "moveDown");
-    playerInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), "moveLeft");
-    playerInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), "moveRight");
+        // Define keystrokes
+        playerInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), "moveUp");
+        playerInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), "moveDown");
+        playerInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), "moveLeft");
+        playerInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), "moveRight");
 
-    // Pass the player object and step-speed (e.g., 5 pixels per press) to MoveAction
-    int movementSpeed = 5;
-    playerActionMap.put("moveUp",    new MoveAction(pane, player, 0, -movementSpeed, "up"));
-        playerActionMap.put("moveDown",  new MoveAction(pane, player, 0, movementSpeed, "down"));
-        playerActionMap.put("moveLeft",  new MoveAction(pane, player, -movementSpeed, 0, "left"));
+        // Pass the player object and step-speed (e.g., 5 pixels per press) to
+        // MoveAction
+        int movementSpeed = 5;
+        playerActionMap.put("moveUp", new MoveAction(pane, player, 0, -movementSpeed, "up"));
+        playerActionMap.put("moveDown", new MoveAction(pane, player, 0, movementSpeed, "down"));
+        playerActionMap.put("moveLeft", new MoveAction(pane, player, -movementSpeed, 0, "left"));
         playerActionMap.put("moveRight", new MoveAction(pane, player, movementSpeed, 0, "right"));
-}
+    }
 
     public static void craftButtonKey(JPanel craft, JLabel status, JPanel pane) {
         Action openCraftMenu = new AbstractAction() {
@@ -188,7 +195,7 @@ public class main {
                 craft.add(craftTitle, BorderLayout.NORTH);
 
                 craft.add(status, BorderLayout.SOUTH);
-                JPanel weaponGrid = new JPanel(new GridLayout(0,1));
+                JPanel weaponGrid = new JPanel(new GridLayout(0, 1));
                 for (Weapon w : Weapon.weaponList) {
                     JButton weapon = new JButton(w.getName());
                     weaponCraft(weapon, craft, status);
