@@ -73,7 +73,7 @@ public class main {
         inventory.setLayout(new BoxLayout(inventory, BoxLayout.Y_AXIS));
         inventory.setBackground(Color.WHITE);
         JLabel inventoryTitle = new JLabel("Inventory");
-        inventory.setBounds(50, 70, 200, 100); // Absolute bounds work safely inside a container that uses null layout
+        inventory.setPreferredSize(new Dimension(200, 150));
         inventory.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
 
         inventory.add(inventoryTitle);
@@ -115,8 +115,11 @@ public class main {
                     inventory.add(new JLabel(key + " x" + playerInventory.get(key)));
                 }
                 inventory.setVisible(!visible);
-                inventory.repaint();
                 inventory.revalidate();
+                inventory.repaint();
+
+                center.revalidate();
+                center.repaint();
             }
         };
 
