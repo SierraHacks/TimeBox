@@ -132,8 +132,10 @@ public ImageIcon getActiveSprite() {
             for (String key : w.getRecipe().keySet()) {
                 this.inventory.put(key, this.inventory.get(key) - w.getRecipe().get(key));
             }
-            this.weapons.add(w);
-            return true;
+            if (!this.weapons.contains(w)){
+                this.weapons.add(w);
+                return true;
+            }
         }
         return false;
     }
