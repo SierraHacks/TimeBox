@@ -20,7 +20,7 @@ public class Player {
     private boolean movingRight = false;
     private boolean movingUp = false;
     private boolean movingDown = false;
-    private double speed = 5;
+    private double speed = 10;
     private String direction = "down";
     
     private ImageIcon moving_upSprite;
