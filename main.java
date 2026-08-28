@@ -1,12 +1,33 @@
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicInternalFrameTitlePane.MoveAction;
-
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 import java.awt.event.*;
 import java.util.Map;
 
 public class main {
     static Player player;
+    
+    public static class JPanelWithBackground extends JPanel {
+
+        private Image backgroundImage;
+
+        // Some code to initialize the background image.
+        // Here, we use the constructor to load the image. This
+        // can vary depending on the use case of the panel.
+        public JPanelWithBackground(String fileName) throws IOException {
+            backgroundImage = ImageIO.read(new File(fileName));
+        }
+
+        public void paintComponent(Graphics g) {
+            super.paintComponent(g);
+
+            // Draw the background image.
+            g.drawImage(backgroundImage, 0, 0, this);
+        }
+    }
 
     public static class MoveAction extends AbstractAction {
         private final int dx;
@@ -73,24 +94,16 @@ public class main {
             }
         };
         pane.setPreferredSize(new Dimension(300, 400));
-        pane.setBackground(Color.WHITE);
-        pane.setOpaque(true);
-        frame.getContentPane().add(pane, BorderLayout.CENTER);
-
-        // Add Start and Quit Button
-        JButton start = new JButton("Start");
-        JButton quit = new JButton("Quit");
-
-        // Adjust size and color of start button
-        start.setPreferredSize(new Dimension(100, 30));
-        start.setBackground(Color.green);
-
-        // Adjust the size and color of the stop button
-        quit.setPreferredSize(new Dimension(75, 25));
-        quit.setBackground(Color.red);
-
-        pane.add(start);
-        pane.add(quit);
+        //pane.setBackground(Color.WHITE);
+        pane.setOpaque(false);
+        try {
+            JPanelWithBackground background = new JPanelWithBackground("Dragons Arena.png");
+                background.setLayout(new BorderLayout());
+                background.add(pane, BorderLayout.CENTER);
+                frame.setContentPane(background);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
         // Inventory Panel
         JPanel inventory = new JPanel();
