@@ -25,7 +25,10 @@ public class Dragon extends NonPlayer {
     }
 
     private void loadSprites() {
+        //need to use x,y coordinates here from the png image
         
     }
+    //working on AI
+
 
 }
