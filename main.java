@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class main {
     static Player player;
-    
+    static Dragon dragon;
     public static class JPanelWithBackground extends JPanel {
 
         private Image backgroundImage;
@@ -91,6 +91,10 @@ public class main {
                     // below to player.getxcoord()
                     g.drawImage(sprite.getImage(), player.getX(), player.getY(), 40, 40, this);
                 }
+                if (dragon != null) {
+                    dragon.draw(g);
+                }
+                
             }
         };
         pane.setPreferredSize(new Dimension(1280, 720));
@@ -244,8 +248,9 @@ public class main {
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 Weapon.initWeapons();
-                player = new Player(100, 0, 0);
+                player = new Player(100, 0, 100);
                 createAndShowGUI();
+                dragon = new Dragon("Boss", 100, 10, 100, 100);
             }
         });
     }
