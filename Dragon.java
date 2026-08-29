@@ -8,15 +8,37 @@ public class Dragon extends NonPlayer {
     public enum State { IDLE, DASH, CLAW_SWIPE, FIRE_BREATH, DEFEAT }
     private State currentState = State.IDLE; //short for currentState, state determines current movement type
 
-    
-    private int x, y;
-    private int currentFrame = 0;
-    private BufferedImage[] currentAnim;
-    
-    //Arrays for the animations
-    private BufferedImage[] idleFrames;
-    private BufferedImage[] dashFrames;
-    private BufferedImage[] fireFrames;
+    private static final int[][] IDLE_RECTS = {
+        {  13,  44, 196, 161},
+        { 257,  44, 187, 161},
+        { 466,  44, 180, 161}
+    };
+    private static final int[][] DASH_RECTS = {
+        {  10, 248, 205, 135},
+        { 220, 248, 275, 135},
+        { 500, 248, 260, 135}
+    };
+    private static final int[][] CLAW_RECTS = {
+        { 795, 265, 180, 135},
+        { 975, 265, 140, 135},
+        {1137, 265, 178, 135},
+        {1318, 265, 208, 135}
+    };
+    private static final int[][] FIRE_RECTS = {
+        { 795, 450, 165, 135},
+        { 968, 450, 190, 135},
+        {1163, 440, 345, 150}
+    };
+    private static final int[][] HIT_RECTS = {
+        {  11, 838, 120, 150},
+        { 150, 838, 120, 150},
+        { 288, 838, 120, 150}
+    };
+    private static final int[][] DEFEAT_RECTS = {
+        { 420, 838, 205, 150},
+        { 630, 838, 190, 150},
+        { 820, 838, 140, 150}
+    };
 
     public Dragon(String name, int health, int damage, int startX, int startY) {
         super(name, health, damage);
