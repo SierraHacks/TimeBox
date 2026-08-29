@@ -7,7 +7,7 @@ import javax.imageio.ImageIO;
 import java.awt.event.*;
 import java.util.Map;
 
-public class main {
+public class Main {
     static Player player;
     static Dragon dragon;
     public static class JPanelWithBackground extends JPanel {
@@ -49,7 +49,7 @@ public class main {
             // 1. Get the current position directly from the player object
 
             // 2. Calculate new positions and update the player object
-            player.setxcoord(player.getX() + dx);
+            player.setxcoord(Math.min(Math.max(0,player.getX() + dx),1280));
             player.setycoord(player.getY() + dy);
 
             player.setDirection(direction);
@@ -277,7 +277,7 @@ public static void setupPlayerBindings(JPanel pane, Player player) {
             public void run() {
                 Weapon.initWeapons();
                 player = new Player(100, 500, 500);
-                dragon = new Dragon("Boss", 100, 10, 100, 100);
+                dragon = new Dragon("Boss", 100, 10, 1200, 700);
                 createAndShowGUI();
             }
         });
