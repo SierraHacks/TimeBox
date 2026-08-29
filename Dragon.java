@@ -40,6 +40,13 @@ public class Dragon extends NonPlayer {
             idleFrames[2] = spriteSheet.getSubimage(185, 11, 73, 68); // sprite5
 
             // Set the default state so the dragon appears immediately
+            
+            fireFrames = new BufferedImage[3];
+            fireFrames[0] = spriteSheet.getSubimage(520, 420, 160, 150); 
+            fireFrames[1] = spriteSheet.getSubimage(680, 420, 160, 150); 
+
+            // Tweak this X coordinate (840) left or right until it grabs the head
+            fireFrames[2] = spriteSheet.getSubimage(840, 420, 300, 150);
             currentAnim = idleFrames;
 
         } catch (IOException e) {
