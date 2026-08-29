@@ -7,7 +7,7 @@ import javax.imageio.ImageIO;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 public class Dragon extends NonPlayer {
-    public enum State { IDLE, DASH, CLAW_SWIPE, FIRE_BREATH, DEFEAT }
+    public enum State { IDLE, FIRE_BREATH, DEFEAT }
     private State currentState = State.IDLE; //short for currentState, state determines current movement type
 
     private static final int[][] IDLE_RECTS = {
@@ -15,22 +15,12 @@ public class Dragon extends NonPlayer {
         { 257,  44, 187, 161},
         { 466,  44, 180, 161}
     };
-    private static final int[][] DASH_RECTS = {
-        {  10, 248, 205, 135},
-        { 220, 248, 275, 135},
-        { 500, 248, 260, 135}
-    };
-    private static final int[][] CLAW_RECTS = {
-        { 795, 265, 180, 135},
-        { 975, 265, 140, 135},
-        {1137, 265, 178, 135},
-        {1318, 265, 208, 135}
-    };
     private static final int[][] FIRE_RECTS = {
         { 795, 450, 165, 135},
         { 968, 450, 190, 135},
         {1163, 440, 345, 150}
     };
+    
     private static final int[][] HIT_RECTS = {
         {  11, 838, 120, 150},
         { 150, 838, 120, 150},
@@ -48,8 +38,6 @@ public class Dragon extends NonPlayer {
     private BufferedImage[] currentAnim;
 
     private BufferedImage[] idleFrames;
-    private BufferedImage[] dashFrames;
-    private BufferedImage[] clawFrames;
     private BufferedImage[] fireFrames;
     private BufferedImage[] hitFrames;
     private BufferedImage[] defeatFrames;
@@ -70,8 +58,8 @@ public class Dragon extends NonPlayer {
         try {
             BufferedImage sheet = ImageIO.read(new File("Dragon.png"));
             idleFrames   = slice(sheet, IDLE_RECTS);
-            dashFrames   = slice(sheet, DASH_RECTS);
-            clawFrames   = slice(sheet, CLAW_RECTS);
+            //dashFrames   = slice(sheet, DASH_RECTS);
+            //clawFrames   = slice(sheet, CLAW_RECTS);
             fireFrames   = slice(sheet, FIRE_RECTS);
             hitFrames    = slice(sheet, HIT_RECTS);
             defeatFrames = slice(sheet, DEFEAT_RECTS);
@@ -107,27 +95,20 @@ public class Dragon extends NonPlayer {
             cooldownTicks--;
             return;
         }
-        int dx = player.getX() - this.x;
-        int dy = player.getY() - this.y;
-        double dist = Math.sqrt(dx * dx + dy * dy);
-
-        if (dist < 100) {
-            startAttack(State.CLAW_SWIPE, clawFrames);
-        } else if (dist < 300) {
-            startAttack(State.FIRE_BREATH, fireFrames);
-        } else {
-            // Too far away: charge toward the player instead of standing still.
-            changeState(State.DASH, dashFrames);
-            this.x += Integer.signum(dx) * 4;
-            this.y += Integer.signum(dy) * 4;
-        }
+        this.startAttack(State.FIRE_BREATH,this.fireFrames,player);
 
     }    
     
     
-    private void startAttack(State s, BufferedImage[] anim) {
+    private void startAttack(State s, BufferedImage[] anim, Player player) {
         changeState(s, anim);
         attackLocked = true;
+        int dx = player.getX() - this.x;
+        int dy = player.getY() - this.y;
+        double dist = Math.sqrt(dx * dx + dy * dy);
+        if(dist < 300){
+            player.takeDamage(this.attack());
+        }
     }
     private void changeState(State newState, BufferedImage[] newAnim) {
         if (currentState != newState) {
