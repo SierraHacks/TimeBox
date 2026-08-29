@@ -83,10 +83,8 @@ public ImageIcon getActiveSprite() {
         return 5 + this.weapon.getDamage();
     }
 
-    public void takeDamage(int damage, boolean block) {
-        if (!block) {
+    public void takeDamage(int damage) {
             this.health -= damage;
-        }
     }
 
     // FIXED: Cast the double coordinates to integers here.
