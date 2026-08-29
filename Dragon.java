@@ -26,34 +26,8 @@ public class Dragon extends NonPlayer {
         currentAnim = idleFrames;
     }
 
-    private void loadSprites() {
-        //need to use x,y coordinates here from the png image
-        //Alright, remind me to never do sprites lke this again
-
-        try {
-            BufferedImage spriteSheet = ImageIO.read(new File("Dragon.png"));
-
-            // IDLE ANIMATION (Using your extracted coordinates)
-            idleFrames = new BufferedImage[3];
-            idleFrames[0] = spriteSheet.getSubimage(3, 0, 81, 79);   // sprite1
-            idleFrames[1] = spriteSheet.getSubimage(102, 15, 75, 67); // sprite6
-            idleFrames[2] = spriteSheet.getSubimage(185, 11, 73, 68); // sprite5
-
-            // Set the default state so the dragon appears immediately
-            
-            fireFrames = new BufferedImage[3];
-            fireFrames[0] = spriteSheet.getSubimage(520, 420, 160, 150); 
-            fireFrames[1] = spriteSheet.getSubimage(680, 420, 160, 150); 
-
-            // Tweak this X coordinate (840) left or right until it grabs the head
-            fireFrames[2] = spriteSheet.getSubimage(840, 420, 300, 150);
-            currentAnim = idleFrames;
-
-        } catch (IOException e) {
-            System.err.println("Failed to load Dragon.png.");
-            e.printStackTrace();
-        }
-    }
+    private void loadSprites() {}
+        
 
                //working on AI
     public void updateAI(Player player) {
