@@ -36,10 +36,24 @@ public class Dragon extends NonPlayer {
 
             // IDLE / FLOAT: Row 1, Left Side (3 frames)
             // Estimated at roughly 130x130 pixels per frame
+            private void loadSprites() {
+        try {
+            BufferedImage spriteSheet = ImageIO.read(new File("Dragon.png"));
+
+            // IDLE ANIMATION (Using your extracted coordinates)
             idleFrames = new BufferedImage[3];
-            idleFrames[0] = spriteSheet.getSubimage(10, 30, 130, 130);   // Frame 1
-            idleFrames[1] = spriteSheet.getSubimage(150, 30, 130, 130);  // Frame 2
-            idleFrames[2] = spriteSheet.getSubimage(290, 30, 130, 130);  // Frame 3
+            idleFrames[0] = spriteSheet.getSubimage(3, 0, 81, 79);   // sprite1
+            idleFrames[1] = spriteSheet.getSubimage(102, 15, 75, 67); // sprite6
+            idleFrames[2] = spriteSheet.getSubimage(185, 11, 73, 68); // sprite5
+
+            // Set the default state so the dragon appears immediately
+            currentAnim = idleFrames;
+
+        } catch (IOException e) {
+            System.err.println("Failed to load Dragon.png.");
+            e.printStackTrace();
+        }
+    }
 
             // DASH / CHARGE: Row 2, Left Side (3 frames)
             // These frames are wider due to the speed lines and stretched body
