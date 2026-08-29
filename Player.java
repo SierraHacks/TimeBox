@@ -20,6 +20,8 @@ public class Player {
     private boolean movingRight = false;
     private boolean movingUp = false;
     private boolean movingDown = false;
+    private boolean attackRight = false;
+    private boolean attackLeft = false;
     private double speed = 10;
     private String direction = "right";
     
@@ -29,6 +31,8 @@ public class Player {
     private ImageIcon idle_downSprite;
     private ImageIcon idle_leftSprite;
     private ImageIcon idle_rightSprite;
+    private ImageIcon attack_leftSprite;
+    private ImageIcon attack_rightSprite;
 
     public Player(int health, int xcoord, int ycoord) {
         this.health = health;
@@ -51,6 +55,9 @@ public class Player {
         moving_rightSprite = loadImage("/movement sprites/char_run_right_anim.gif");
         idle_leftSprite    = loadImage("/movement sprites/char_idle_right_anim.gif");
         moving_leftSprite  = loadImage("/movement sprites/char_run_left_anim.gif");
+        attack_leftSprite = loadImage("char_attack_left_anim.gif");
+        attack_rightSprite = loadImage("char_attack_right_anim.gif");
+
     }
 
     private ImageIcon loadImage(String path) {
