@@ -4,6 +4,8 @@ import javax.swing.Timer;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 public class Dragon extends NonPlayer {
     public enum State { IDLE, DASH, CLAW_SWIPE, FIRE_BREATH, DEFEAT }
     private State currentState = State.IDLE; //short for currentState, state determines current movement type

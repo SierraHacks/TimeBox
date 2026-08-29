@@ -21,10 +21,8 @@ public class Player {
     private boolean movingUp = false;
     private boolean movingDown = false;
     private double speed = 10;
-    private String direction = "down";
+    private String direction = "right";
     
-    private ImageIcon moving_upSprite;
-    private ImageIcon moving_downSprite;
     private ImageIcon moving_leftSprite;
     private ImageIcon moving_rightSprite;
     private ImageIcon idle_upSprite;
@@ -45,8 +43,6 @@ public class Player {
     public void update() {
         if (movingLeft) xcoord -= speed;
         if (movingRight) xcoord += speed;
-        if (movingUp) ycoord -= speed;
-        if (movingDown) ycoord += speed;
     }
 
     private void loadSprites(){
@@ -55,10 +51,6 @@ public class Player {
         moving_rightSprite = loadImage("/movement sprites/char_run_right_anim.gif");
         idle_leftSprite    = loadImage("/movement sprites/char_idle_right_anim.gif");
         moving_leftSprite  = loadImage("/movement sprites/char_run_left_anim.gif");
-        idle_upSprite      = loadImage("/movement sprites/char_idle_up_anim.gif");
-        moving_upSprite    = loadImage("/movement sprites/char_run_up_anim.gif");
-        idle_downSprite    = loadImage("/movement sprites/char_idle_down_anim.gif");
-        moving_downSprite  = loadImage("/movement sprites/char_run_down_anim.gif");
     }
 
     private ImageIcon loadImage(String path) {
@@ -73,14 +65,10 @@ public class Player {
 
 public ImageIcon getActiveSprite() {
     switch (direction) {
-        case "up":
-            return moving_upSprite;
         case "left":
             return moving_leftSprite;
-        case "right":
-            return moving_rightSprite;
         default:
-            return moving_downSprite;
+            return moving_rightSprite;
     }
 }
 
@@ -118,8 +106,6 @@ public ImageIcon getActiveSprite() {
 
     public void setMovingLeft(boolean moving)   { this.movingLeft = moving; }
     public void setMovingRight(boolean moving)  { this.movingRight = moving; }
-    public void setMovingUp(boolean moving)     { this.movingUp = moving; }
-    public void setMovingDown(boolean moving)   { this.movingDown = moving; }
 
     private boolean craftHelper(Weapon w) {
         if (this.inventory.keySet().containsAll(w.getRecipe().keySet())) {

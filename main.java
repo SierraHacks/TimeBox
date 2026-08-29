@@ -181,16 +181,12 @@ public class main {
         ActionMap playerActionMap = pane.getActionMap();
 
         // Define keystrokes
-        playerInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), "moveUp");
-        playerInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), "moveDown");
         playerInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), "moveLeft");
         playerInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), "moveRight");
 
         // Pass the player object and step-speed (e.g., 5 pixels per press) to
         // MoveAction
         int movementSpeed = 5;
-        playerActionMap.put("moveUp", new MoveAction(pane, player, 0, -movementSpeed, "up"));
-        playerActionMap.put("moveDown", new MoveAction(pane, player, 0, movementSpeed, "down"));
         playerActionMap.put("moveLeft", new MoveAction(pane, player, -movementSpeed, 0, "left"));
         playerActionMap.put("moveRight", new MoveAction(pane, player, movementSpeed, 0, "right"));
     }
