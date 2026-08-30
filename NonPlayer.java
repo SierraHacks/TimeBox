@@ -13,4 +13,7 @@ public class NonPlayer{
    public int attack(){
     return this.damage;
    }
+   public int getHealth(){
+    return this.health;
+   }
 }

@@ -112,7 +112,7 @@ public class Dragon extends NonPlayer {
         animLock = true;
         double dist = Math.sqrt(Math.pow(player.getX() - this.x, 2) + Math.pow(player.getY() - this.y, 2));
         Weapon w= player.getWeapon();
-        if(w!=null && dist < w.getRange()){
+        if(w!=null && dist < w.getRange() || w==null && dist<5){
             this.takeDamage(player.attack());
         }
     }

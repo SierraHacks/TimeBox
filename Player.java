@@ -11,11 +11,11 @@ public class Player {
     private Weapon weapon;
     private Map<String, Integer> inventory = new HashMap<>();
     private ArrayList<Weapon> weapons = new ArrayList<>();
-    
+
     // Kept as doubles for precise movement accumulation if needed
     private double xcoord;
     private double ycoord;
-    
+
     private boolean movingLeft = false;
     private boolean movingRight = false;
     private boolean movingUp = false;
@@ -24,7 +24,7 @@ public class Player {
     private boolean attackLeft = false;
     private double speed = 10;
     private String direction = "right";
-    
+
     private ImageIcon moving_leftSprite;
     private ImageIcon moving_rightSprite;
     private ImageIcon idle_upSprite;
@@ -38,26 +38,28 @@ public class Player {
         this.health = health;
         this.xcoord = xcoord;
         this.ycoord = ycoord;
-        
-        // FIXED: You must call loadSprites inside the constructor, 
+
+        // FIXED: You must call loadSprites inside the constructor,
         // otherwise your sprites stay null!
-        loadSprites(); 
+        loadSprites();
     }
 
     public void update(int screenWidth) {
-        if (movingLeft) xcoord -= speed;
-        if (movingRight) xcoord += speed;
+        if (movingLeft)
+            xcoord -= speed;
+        if (movingRight)
+            xcoord += speed;
         xcoord = Math.max(0, Math.min(xcoord, screenWidth - 40));
 
     }
 
-
-    private void loadSprites(){
-        // FIXED: Added a leading "/" to all paths so Java looks in the root resource directory
-        idle_rightSprite   = loadImage("/movement sprites/char_idle_right_anim.gif");
+    private void loadSprites() {
+        // FIXED: Added a leading "/" to all paths so Java looks in the root resource
+        // directory
+        idle_rightSprite = loadImage("/movement sprites/char_idle_right_anim.gif");
         moving_rightSprite = loadImage("/movement sprites/char_run_right_anim.gif");
-        idle_leftSprite    = loadImage("/movement sprites/char_idle_right_anim.gif");
-        moving_leftSprite  = loadImage("/movement sprites/char_run_left_anim.gif");
+        idle_leftSprite = loadImage("/movement sprites/char_idle_right_anim.gif");
+        moving_leftSprite = loadImage("/movement sprites/char_run_left_anim.gif");
         attack_leftSprite = loadImage("char_attack_left_anim.gif");
         attack_rightSprite = loadImage("char_attack_right_anim.gif");
 
@@ -73,60 +75,69 @@ public class Player {
         }
     }
 
-public ImageIcon getActiveSprite() {
-    switch (direction) {
-        case "left":
-            return moving_leftSprite;
-        default:
-            return moving_rightSprite;
+    public ImageIcon getActiveSprite() {
+        switch (direction) {
+            case "left":
+                return moving_leftSprite;
+            default:
+                return moving_rightSprite;
+        }
     }
-}
 
     public int attack() {
-        return 5 + this.weapon.getDamage();
+        if (this.weapon != null) {
+            return 5 + this.weapon.getDamage();
+        }
+        return 5;
     }
 
     public void takeDamage(int damage) {
-            this.health -= damage;
+        this.health -= damage;
     }
 
     // FIXED: Cast the double coordinates to integers here.
-    // This allows g.drawImage(..., player.getX(), player.getY(), ...) to compile flawlessly!
-    public int getX() { 
-        return (int) xcoord; 
+    // This allows g.drawImage(..., player.getX(), player.getY(), ...) to compile
+    // flawlessly!
+    public int getX() {
+        return (int) xcoord;
     }
 
-    public int getY() { 
-        return (int) ycoord; 
+    public int getY() {
+        return (int) ycoord;
     }
 
-    public void setDirection(String direction) { 
-        this.direction = direction; 
+    public void setDirection(String direction) {
+        this.direction = direction;
     }
 
-    public void setxcoord(double new_xcoord) { 
-        this.xcoord = new_xcoord; 
+    public void setxcoord(double new_xcoord) {
+        this.xcoord = new_xcoord;
     }
 
-    public void setycoord(double new_ycoord){ 
-        this.ycoord = new_ycoord; 
+    public void setycoord(double new_ycoord) {
+        this.ycoord = new_ycoord;
     }
 
-    public void setMovingLeft(boolean moving)   { this.movingLeft = moving; }
-    public void setMovingRight(boolean moving)  { this.movingRight = moving; }
+    public void setMovingLeft(boolean moving) {
+        this.movingLeft = moving;
+    }
+
+    public void setMovingRight(boolean moving) {
+        this.movingRight = moving;
+    }
 
     private boolean craftHelper(Weapon w) {
         if (this.inventory.keySet().containsAll(w.getRecipe().keySet())) {
             for (String key : w.getRecipe().keySet()) {
                 boolean matreq = this.inventory.get(key) - w.getRecipe().get(key) >= 0;
-                if(!matreq){
+                if (!matreq) {
                     return false;
                 }
             }
             for (String key : w.getRecipe().keySet()) {
                 this.inventory.put(key, this.inventory.get(key) - w.getRecipe().get(key));
             }
-            if (!this.weapons.contains(w)){
+            if (!this.weapons.contains(w)) {
                 this.weapons.add(w);
                 return true;
             }
@@ -144,8 +155,8 @@ public ImageIcon getActiveSprite() {
         return null;
     }
 
-    public boolean craft(String wName){
-        if(weaponRetrieve(wName) != null){
+    public boolean craft(String wName) {
+        if (weaponRetrieve(wName) != null) {
             return this.craftHelper(weaponRetrieve(wName));
         }
         return false;
@@ -161,17 +172,19 @@ public ImageIcon getActiveSprite() {
         return Collections.unmodifiableMap(this.inventory);
     }
 
-    public ArrayList<Weapon> getAllWeapons(){
+    public ArrayList<Weapon> getAllWeapons() {
         return this.weapons;
     }
 
-    public void updateInventory(String key, int add){
-        this.inventory.put(key, this.inventory.get(key)+add);
+    public void updateInventory(String key, int add) {
+        this.inventory.put(key, this.inventory.get(key) + add);
     }
-    public Weapon getWeapon(){
+
+    public Weapon getWeapon() {
         return this.weapon;
     }
-    public int getHealth(){
+
+    public int getHealth() {
         return this.health;
     }
 
