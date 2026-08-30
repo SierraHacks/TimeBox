@@ -171,5 +171,8 @@ public ImageIcon getActiveSprite() {
     public Weapon getWeapon(){
         return this.weapon;
     }
+    public int getHealth(){
+        return this.health;
+    }
 
 }
