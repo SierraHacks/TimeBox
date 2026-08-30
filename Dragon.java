@@ -143,7 +143,10 @@ public class Dragon extends NonPlayer {
         // Pixel art: keep the hard edges instead of blurring them.
         g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
                             RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
-        g2.drawImage(frame, x, y, w, h, null);
+        g2.translate(x + w, y);
+        g2.scale(-1, 1);
+        g2.drawImage(frame, 0, 0, w, h, null);
+
         g2.dispose();
 
         // g.drawRect(x, y, w, h);  // uncomment to see the hitbox while debugging
