@@ -10,6 +10,7 @@ import java.util.Map;
 public class Main {
     static Player player;
     static Dragon dragon;
+
     public static class JPanelWithBackground extends JPanel {
 
         private Image backgroundImage;
@@ -49,7 +50,7 @@ public class Main {
             // 1. Get the current position directly from the player object
 
             // 2. Calculate new positions and update the player object
-            player.setxcoord(Math.min(Math.max(0,player.getX() + dx),1280));
+            player.setxcoord(Math.min(Math.max(0, player.getX() + dx), 1280));
             player.setycoord(player.getY() + dy);
 
             player.setDirection(direction);
@@ -94,19 +95,19 @@ public class Main {
                 if (dragon != null) {
                     dragon.draw(g);
                 }
-                
+
             }
         };
         pane.setPreferredSize(new Dimension(1280, 720));
         pane.setOpaque(false);
         try {
             JPanelWithBackground background = new JPanelWithBackground("DragonArenaScaled.png");
-                background.setLayout(new BorderLayout());
-                background.add(pane, BorderLayout.CENTER);
-                frame.setContentPane(background);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            background.setLayout(new BorderLayout());
+            background.add(pane, BorderLayout.CENTER);
+            frame.setContentPane(background);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         frame.setResizable(false);
         frame.pack();
@@ -148,6 +149,16 @@ public class Main {
         setupPlayerBindings(pane, player);
         inventoryKeyBinding(inventory, pane);
         craftButtonKey(craft, status, pane);
+        attack(pane, player);
+
+        Timer gameTimer = new Timer(100, e -> {
+            dragon.updateAI(player);
+            dragon.tickAnimation();
+            pane.repaint();
+        });
+
+        gameTimer.start();
+
     }
 
     // inventory toggle upon pressing "c" key
@@ -178,50 +189,61 @@ public class Main {
         center.getActionMap().put("toggleInventory", displayInventory);
     }
 
-public static void setupPlayerBindings(JPanel pane, Player player) {
+    public static void setupPlayerBindings(JPanel pane, Player player) {
 
-    InputMap input = pane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-    ActionMap actions = pane.getActionMap();
+        InputMap input = pane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        ActionMap actions = pane.getActionMap();
 
-    input.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0, false), "leftPressed");
-    input.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0, true), "leftReleased");
+        input.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0, false), "leftPressed");
+        input.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0, true), "leftReleased");
 
-    input.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0, false), "rightPressed");
-    input.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0, true), "rightReleased");
+        input.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0, false), "rightPressed");
+        input.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0, true), "rightReleased");
 
-    actions.put("leftPressed", new AbstractAction() {
-        public void actionPerformed(ActionEvent e) {
-            player.setMovingLeft(true);
-            player.setDirection("left");
-        }
-    });
+        actions.put("leftPressed", new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                player.setMovingLeft(true);
+                player.setDirection("left");
+            }
+        });
 
-    actions.put("leftReleased", new AbstractAction() {
-        public void actionPerformed(ActionEvent e) {
-            player.setMovingLeft(false);
-        }
-    });
+        actions.put("leftReleased", new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                player.setMovingLeft(false);
+            }
+        });
 
-    actions.put("rightPressed", new AbstractAction() {
-        public void actionPerformed(ActionEvent e) {
-            player.setMovingRight(true);
-            player.setDirection("right");
-        }
-    });
+        actions.put("rightPressed", new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                player.setMovingRight(true);
+                player.setDirection("right");
+            }
+        });
 
-    actions.put("rightReleased", new AbstractAction() {
-        public void actionPerformed(ActionEvent e) {
-            player.setMovingRight(false);
-        }
-    });
+        actions.put("rightReleased", new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                player.setMovingRight(false);
+            }
+        });
 
-    Timer timer = new Timer(16, e -> {
-        player.update();
-        pane.repaint();
-    });
+        Timer timer = new Timer(16, e -> {
+            player.update();
+            pane.repaint();
+        });
 
-    timer.start();
-}
+        timer.start();
+    }
+
+    public static void attack(JPanel pane, Player player) {
+        Action attack = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dragon.startDamage(player);
+            }
+        };
+        pane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("SPACE"), "attack");
+        pane.getActionMap().put("attack", attack);
+    }
 
     public static void craftButtonKey(JPanel craft, JLabel status, JPanel pane) {
         Action openCraftMenu = new AbstractAction() {
@@ -280,7 +302,6 @@ public static void setupPlayerBindings(JPanel pane, Player player) {
                 dragon = new Dragon("Boss", 100, 10, 1200, 700);
                 createAndShowGUI();
             }
-        });
+        }); // <--- Added the missing closing parenthesis here
     }
-
 }

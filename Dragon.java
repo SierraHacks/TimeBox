@@ -7,7 +7,7 @@ import javax.imageio.ImageIO;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 public class Dragon extends NonPlayer {
-    public enum State { IDLE, FIRE_BREATH, DEFEAT }
+    public enum State { IDLE, FIRE_BREATH, HIT, DEFEAT }
     private State currentState = State.IDLE; //short for currentState, state determines current movement type
 
     private static final int[][] IDLE_RECTS = {
@@ -44,7 +44,7 @@ public class Dragon extends NonPlayer {
 
     
     // Attacks play through once, then the dragon goes back to idle for a moment.
-    private boolean attackLocked = false;
+    private boolean animLock = false;
     private int cooldownTicks = 0;
     public Dragon(String name, int health, int damage, int startX, int startY) {
         super(name, health, damage);
@@ -78,14 +78,12 @@ public class Dragon extends NonPlayer {
         }
         return frames;
     }
-    //Updated AI, for some reason, the dragon did not move at all earlier, so I jsut reworked it
     public void updateAI(Player player) {
         if (currentState == State.DEFEAT) return;
-
         // Let an attack animation finish before choosing a new move.
-        if (attackLocked) {
+        if (animLock) {
             if (currentFrame == currentAnim.length - 1) {
-                attackLocked = false;
+                animLock = false;
                 cooldownTicks = 8; // ~0.8s at a 100ms timer
                 changeState(State.IDLE, idleFrames);
             }
@@ -95,19 +93,27 @@ public class Dragon extends NonPlayer {
             cooldownTicks--;
             return;
         }
-        this.startAttack(State.FIRE_BREATH,this.fireFrames,player);
-
+        this.startAttack(State.FIRE_BREATH,this.fireFrames,player); 
     }    
     
     
     private void startAttack(State s, BufferedImage[] anim, Player player) {
         changeState(s, anim);
-        attackLocked = true;
+        animLock = true;
         int dx = player.getX() - this.x;
         int dy = player.getY() - this.y;
         double dist = Math.sqrt(dx * dx + dy * dy);
         if(dist < 300){
             player.takeDamage(this.attack());
+        }
+    }
+    public void startDamage(Player player){
+        changeState(State.HIT, this.hitFrames);
+        animLock = true;
+        double dist = Math.sqrt(Math.pow(player.getX() - this.x, 2) + Math.pow(player.getY() - this.y, 2));
+        Weapon w= player.getWeapon();
+        if(w!=null && dist < w.getRange()){
+            this.takeDamage(player.attack());
         }
     }
     private void changeState(State newState, BufferedImage[] newAnim) {
@@ -120,7 +126,7 @@ public class Dragon extends NonPlayer {
     }
     public void tickAnimation() {
         if (currentAnim == null || currentAnim.length == 0) return;
-        if (attackLocked && currentFrame == currentAnim.length - 1) return; // hold last attack frame
+        if (animLock && currentFrame == currentAnim.length - 1) return; // hold last attack frame
         currentFrame = (currentFrame + 1) % currentAnim.length;
     }
 
@@ -147,7 +153,5 @@ public class Dragon extends NonPlayer {
     public int getX()        { return x; }
     public int getY()        { return y; }
     public void setPosition(int x, int y) { this.x = x; this.y = y; }
-
-    //Alright, I tested this code on my VS Code editor, hopefully it works, because I cant run it here
 
 }
