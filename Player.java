@@ -145,7 +145,7 @@ public class Player {
         return false;
     }
 
-    private static Weapon weaponRetrieve(String weaponChoice) {
+    public static Weapon weaponRetrieve(String weaponChoice) {
         for (int i = 0; i < Weapon.weaponList.size(); i++) {
             Weapon w = Weapon.weaponList.get(i);
             if (weaponChoice.equals(w.getName())) {
@@ -177,7 +177,7 @@ public class Player {
     }
 
     public void updateInventory(String key, int add) {
-        this.inventory.put(key, this.inventory.get(key) + add);
+        this.inventory.put(key, this.inventory.getOrDefault(key, 0) + add);
     }
 
     public Weapon getWeapon() {

@@ -78,7 +78,7 @@ public class Main {
         frame.add(title, BorderLayout.PAGE_START);
 
         // Adds a flow panel at center of screen
-        final JPanel pane = new JPanel(new FlowLayout()) {
+        final JPanel pane = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
@@ -101,7 +101,9 @@ public class Main {
 
             }
         };
-        pane.setPreferredSize(new Dimension(1280, 720));
+        //pane.setPreferredSize(new Dimension(1280, 720));
+        pane.setLayout(null);
+        pane.setBounds(0,0,1280,720);
         pane.setOpaque(false);
         try {
             JPanelWithBackground background = new JPanelWithBackground("DragonArenaScaled.png");
@@ -113,7 +115,7 @@ public class Main {
         }
 
         frame.setResizable(false);
-        frame.pack();
+        //frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
         frame.getContentPane().add(pane, BorderLayout.CENTER);
@@ -124,7 +126,8 @@ public class Main {
         inventory.setBackground(Color.WHITE);
         JLabel inventoryTitle = new JLabel("Inventory", SwingConstants.CENTER);
         inventoryTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
-        inventory.setPreferredSize(new Dimension(200, 150));
+        inventory.setBounds(20,20, 200, 150);
+        //inventory.setPreferredSize(new Dimension(200, 150));
         inventory.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
 
         inventory.add(inventoryTitle);
@@ -139,20 +142,38 @@ public class Main {
         craft.setName("craft");
         JLabel craftTitle = new JLabel("Crafting", SwingConstants.CENTER);
         craft.add(craftTitle, BorderLayout.NORTH);
-        craft.setPreferredSize(new Dimension(250, 200));
+        //craft.setPreferredSize(new Dimension(250, 200));
+        craft.setBounds(950, 50, 250, 200);
         craft.add(status, BorderLayout.SOUTH);
         craft.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
         craft.setVisible(false);
         pane.add(craft);
         // Show the frame
-        frame.setLocationRelativeTo(null); // Center on screen
+        frame.setLocationRelativeTo(null); 
         frame.setVisible(true);
+
+
+        //Equip panel
+        JPanel equip = new JPanel();
+        equip.setLayout(new BoxLayout(equip, BoxLayout.Y_AXIS));
+        JLabel equipTitle = new JLabel("Equip Weapons",SwingConstants.CENTER);
+        equip.add(equipTitle);
+        equip.setBounds(100,100, 250,200);
+        JLabel equipstat = new JLabel("");
+        JLabel currentWeapon = new JLabel("Current Weapon: " + player.getWeapon());
+        equip.add(currentWeapon);
+        equip.add(equipstat);
+        equip.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+        pane.add(equip);
+        equip.setVisible(false);
+        frame.setLocationRelativeTo(null); 
 
         // KEY BINDINGS
         setupPlayerBindings(pane, player);
         inventoryKeyBinding(inventory, pane);
         craftButtonKey(craft, status, pane);
         attack(pane, player);
+        weaponPanel(equip, pane, currentWeapon,equipstat);
 
         Timer gameTimer = new Timer(100, e -> {
             dragon.updateAI(player);
@@ -297,12 +318,66 @@ public class Main {
         });
     }
 
+
+    //press e to open weapons/equip
+    public static void weaponPanel(JPanel equip, JPanel pane, JLabel currWeapon, JLabel estat) {
+        Action equipWeapon = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (equip.isVisible()) {
+                    equip.setVisible(false);
+                    return;
+                }
+                equip.removeAll();
+                JLabel equipTitle = new JLabel("Equip Weapon", SwingConstants.CENTER);
+                equip.add(equipTitle);
+                equip.add(estat);
+                JPanel weaponListGrid = new JPanel(new GridLayout(0, 1));
+                for (Weapon w : player.getAllWeapons()) {
+                    JButton weapon = new JButton(w.getName());
+                    equipButton(weapon, equip, currWeapon, estat);
+                    weapon.setMaximumSize(new Dimension(50, 30));
+                    weaponListGrid.add(weapon);
+                    weaponListGrid.add(Box.createRigidArea(new Dimension(0, 5)));
+                }
+                equip.add(weaponListGrid);
+                equip.add(currWeapon);
+                equip.setVisible(true);
+                equip.revalidate();
+                equip.repaint();
+            }
+        };
+        pane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_E, 0), "openEquip");
+
+        pane.getActionMap()
+                .put("openEquip", equipWeapon);
+    };
+    
+    public static void equipButton(JButton button, JPanel c, JLabel Estat, JLabel currWeapon) {
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Weapon w = Player.weaponRetrieve(button.getText());
+                if (w != null) {
+                    player.equipWeapon(w);
+                    currWeapon.setText(" Current Weapon: " + player.getWeapon().getName());
+                } else {
+                    Estat.setText("You cannot equip a " + button.getText() + ". You must first craft a weapon before equipping it.");
+                }
+                c.repaint();
+                c.revalidate();
+            }
+        });
+    }
+
     public static void main(String[] args) {
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 Weapon.initWeapons();
                 player = new Player(100, 60, 560);
                 dragon = new Dragon("Boss", 100, 10, 1050, 550);
+                player.updateInventory("Wood", 2);
+                player.updateInventory("Steel", 5);
                 createAndShowGUI();
             }
         }); 
