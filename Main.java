@@ -298,8 +298,8 @@ public class Main {
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 Weapon.initWeapons();
-                player = new Player(100, 500, 500);
-                dragon = new Dragon("Boss", 100, 10, 1100, 600);
+                player = new Player(100, 60, 560);
+                dragon = new Dragon("Boss", 100, 10, 1050, 550);
                 createAndShowGUI();
             }
         }); 
