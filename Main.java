@@ -86,14 +86,20 @@ public class Main {
                 // Ensure the player object exists and has an active GIF loaded
                 if (player != null && player.getActiveSprite() != null) {
                     ImageIcon sprite = player.getActiveSprite();
-
-                    // FIXED: Changed 'this' to 'pane' to fix the drawImage type mismatch error
-                    // NOTE: If player uses getxcoord() instead of getX(), change player.getX()
-                    // below to player.getxcoord()
                     g.drawImage(sprite.getImage(), player.getX(), player.getY(), 40, 40, this);
+                    g.setColor(Color.WHITE);
+                    g.setFont(new Font("Arial", Font.BOLD,14));
+                    g.drawString("Player Health: " + player.getHealth() + "/100", player.getX(), player.getY()-10);
+
                 }
                 if (dragon != null) {
                     dragon.draw(g);
+                if (dragon != null) {
+                    dragon.draw(g);
+                    g.setColor(Color.WHITE);
+                    g.setFont(new Font("Arial", Font.BOLD,14));
+                    g.drawString("Enemy Health: " + dragon.getHealth() + "/100", dragon.getX(), player.getY()-10);
+                }
                 }
 
             }
