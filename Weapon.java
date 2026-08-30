@@ -52,6 +52,9 @@ public static void initWeapons() {
     public Map<String, Integer> getRecipe() {
         return Collections.unmodifiableMap(this.recipe);
     }
+    public int getRange(){
+        return this.range;
+    }
 
     
 }

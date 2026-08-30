@@ -158,12 +158,15 @@ public ImageIcon getActiveSprite() {
         return Collections.unmodifiableMap(this.inventory);
     }
 
-    public ArrayList<Weapon> getWeapons(){
+    public ArrayList<Weapon> getAllWeapons(){
         return this.weapons;
     }
 
     public void updateInventory(String key, int add){
         this.inventory.put(key, this.inventory.get(key)+add);
+    }
+    public Weapon getWeapon(){
+        return this.weapon;
     }
 
 }
