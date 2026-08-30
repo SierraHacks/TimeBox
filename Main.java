@@ -50,7 +50,7 @@ public class Main {
             // 1. Get the current position directly from the player object
 
             // 2. Calculate new positions and update the player object
-            player.setxcoord(Math.min(Math.max(0, player.getX() + dx), 1280));
+            player.setxcoord(Math.max(0, Math.min(player.getX()+dx, pane.getWidth() - 40)));
             player.setycoord(player.getY() + dy);
 
             player.setDirection(direction);
@@ -227,7 +227,7 @@ public class Main {
         });
 
         Timer timer = new Timer(16, e -> {
-            player.update();
+            player.update(pane.getWidth());
             pane.repaint();
         });
 
@@ -299,9 +299,9 @@ public class Main {
             public void run() {
                 Weapon.initWeapons();
                 player = new Player(100, 500, 500);
-                dragon = new Dragon("Boss", 100, 10, 1200, 700);
+                dragon = new Dragon("Boss", 100, 10, 1100, 600);
                 createAndShowGUI();
             }
-        }); // <--- Added the missing closing parenthesis here
+        }); 
     }
 }

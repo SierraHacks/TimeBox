@@ -44,10 +44,13 @@ public class Player {
         loadSprites(); 
     }
 
-    public void update() {
+    public void update(int screenWidth) {
         if (movingLeft) xcoord -= speed;
         if (movingRight) xcoord += speed;
+        xcoord = Math.max(0, Math.min(xcoord, screenWidth - 40));
+
     }
+
 
     private void loadSprites(){
         // FIXED: Added a leading "/" to all paths so Java looks in the root resource directory
