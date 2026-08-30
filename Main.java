@@ -34,7 +34,7 @@ public class Main {
         private final int dx;
         private final int dy;
         private final String direction;
-        private final Player player; // Reference to the actual player in your game
+        private final Player player; 
         private final JPanel pane;
 
         public MoveAction(JPanel pane, Player player, int dx, int dy, String direction) {
@@ -94,12 +94,9 @@ public class Main {
                 }
                 if (dragon != null) {
                     dragon.draw(g);
-                if (dragon != null) {
-                    dragon.draw(g);
                     g.setColor(Color.WHITE);
                     g.setFont(new Font("Arial", Font.BOLD,14));
-                    g.drawString("Enemy Health: " + dragon.getHealth() + "/100", dragon.getX(), player.getY()-10);
-                }
+                    g.drawString("Enemy Health: " + dragon.getHealth() + "/100", dragon.getX(), dragon.getY()-10);
                 }
 
             }
