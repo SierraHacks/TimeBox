@@ -6,11 +6,14 @@ import java.net.URL;
 import javax.swing.ImageIcon;
 
 public class Player {
-    static int level = 0;
+    static int level = 1;
     private int health;
     private Weapon weapon;
     private Map<String, Integer> inventory = new HashMap<>();
     private ArrayList<Weapon> weapons = new ArrayList<>();
+    private boolean dead = false;
+    private long deathTime;
+
 
     // Kept as doubles for precise movement accumulation if needed
     private double xcoord;
@@ -197,5 +200,29 @@ public class Player {
     public int getHealth() {
         return this.health;
     }
+
+
+    public void startDeath() {
+        if (!dead) {
+            dead = true;
+            deathTime = System.currentTimeMillis();
+        }
+    }
+
+    public boolean isDead() {
+        return dead;
+    }
+
+    public boolean isDeathFinished() {
+        return dead && System.currentTimeMillis() - deathTime >= 1000;
+    }
+
+    public void reset(int health, int x, int y) {
+        this.health = health;
+        this.xcoord = x;
+        this.ycoord = y;
+        this.dead = false;
+    }
+
 
 }

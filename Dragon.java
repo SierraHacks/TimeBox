@@ -150,6 +150,10 @@ public class Dragon extends NonPlayer {
         // g.drawRect(x, y, w, h);  // uncomment to see the hitbox while debugging
     }
 
+    public boolean isDefeatFinished(){
+        return(this.getHealth() <= 0);
+    }
+
     public State getState()  { return currentState; }
     public int getX()        { return x; }
     public int getY()        { return y; }
