@@ -10,6 +10,7 @@ import java.util.Map;
 public class Main {
     static Player player;
     static Dragon dragon;
+    private static final int SPRITE_SIZE = 40;
 
     public static class JPanelWithBackground extends JPanel {
 
@@ -86,7 +87,7 @@ public class Main {
                 // Ensure the player object exists and has an active GIF loaded
                 if (player != null && player.getActiveSprite() != null) {
                     ImageIcon sprite = player.getActiveSprite();
-                    g.drawImage(sprite.getImage(), player.getX(), player.getY(), 40, 40, this);
+                    g.drawImage(sprite.getImage(), player.getX(), player.getY(), SPRITE_SIZE, SPRITE_SIZE, this);
                     g.setColor(Color.WHITE);
                     g.setFont(new Font("Arial", Font.BOLD,14));
                     g.drawString("Player Health: " + player.getHealth() + "/100", player.getX(), player.getY()-10);
@@ -262,7 +263,16 @@ public class Main {
         Action attack = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                player.setAttacking(true);
+                pane.repaint();
                 dragon.startDamage(player);
+
+                Timer attackTimer = new Timer(180, evt -> {
+                    player.setAttacking(false);
+                    pane.repaint();
+                });
+                attackTimer.setRepeats(false);
+                attackTimer.start();
             }
         };
         pane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("SPACE"), "attack");

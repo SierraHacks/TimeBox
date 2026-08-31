@@ -22,6 +22,7 @@ public class Player {
     private boolean movingDown = false;
     private boolean attackRight = false;
     private boolean attackLeft = false;
+    private boolean attacking = false;
     private double speed = 10;
     private String direction = "right";
 
@@ -54,14 +55,12 @@ public class Player {
     }
 
     private void loadSprites() {
-        // FIXED: Added a leading "/" to all paths so Java looks in the root resource
-        // directory
         idle_rightSprite = loadImage("/movement sprites/char_idle_right_anim.gif");
         moving_rightSprite = loadImage("/movement sprites/char_run_right_anim.gif");
-        idle_leftSprite = loadImage("/movement sprites/char_idle_right_anim.gif");
+        idle_leftSprite = loadImage("/movement sprites/char_idle_left_anim.gif");
         moving_leftSprite = loadImage("/movement sprites/char_run_left_anim.gif");
-        attack_leftSprite = loadImage("char_attack_left_anim.gif");
-        attack_rightSprite = loadImage("char_attack_right_anim.gif");
+        attack_leftSprite = loadImage("/char_attack_left_anim.gif");
+        attack_rightSprite = loadImage("/char_attack_right_anim.gif");
 
     }
 
@@ -76,12 +75,23 @@ public class Player {
     }
 
     public ImageIcon getActiveSprite() {
+        if (attacking) {
+            if ("left".equals(direction)) {
+                return attack_leftSprite != null ? attack_leftSprite : moving_leftSprite;
+            }
+            return attack_rightSprite != null ? attack_rightSprite : moving_rightSprite;
+        }
+
         switch (direction) {
             case "left":
                 return moving_leftSprite;
             default:
                 return moving_rightSprite;
         }
+    }
+
+    public void setAttacking(boolean attacking) {
+        this.attacking = attacking;
     }
 
     public int attack() {
