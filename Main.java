@@ -114,6 +114,15 @@ public class Main {
                             player.getX(),
                             player.getY() - 30);
                 }
+                if (player.isDead()){
+                    g.drawString("PLAYER DIED", 650, 360);
+                    g.setFont(new Font("Arial", Font.BOLD, 40));
+                }
+                if (dragon.isDefeatFinished()){
+                    g.drawString("DRAGON DIED", 650, 360);
+                    g.setFont(new Font("Arial", Font.BOLD, 40));
+                }
+
 
             }
         };
@@ -142,7 +151,7 @@ public class Main {
         inventory.setBackground(Color.WHITE);
         JLabel inventoryTitle = new JLabel("Inventory", SwingConstants.CENTER);
         inventoryTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
-        inventory.setBounds(20, 20, 200, 150);
+        inventory.setBounds(20, 50, 200, 150);
         // inventory.setPreferredSize(new Dimension(200, 150));
         inventory.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
 
@@ -173,7 +182,7 @@ public class Main {
         equip.setLayout(new BoxLayout(equip, BoxLayout.Y_AXIS));
         JLabel equipTitle = new JLabel("Equip Weapons", SwingConstants.CENTER);
         equip.add(equipTitle);
-        equip.setBounds(100, 100, 250, 200);
+        equip.setBounds(250, 50, 250, 200);
         JLabel equipstat = new JLabel("");
         JLabel currentWeapon = new JLabel("Current Weapon: " + player.getWeapon());
         equip.add(currentWeapon);
@@ -431,8 +440,6 @@ public class Main {
                 Weapon.initWeapons();
                 player = new Player(100, 60, 560);
                 dragon = new Dragon("Boss", 150, 10, 1050, 550);
-                player.updateInventory("Wood", 2);
-                player.updateInventory("Steel", 5);
                 createAndShowGUI();
             }
         });
