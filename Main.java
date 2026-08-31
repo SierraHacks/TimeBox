@@ -10,6 +10,7 @@ import java.util.Map;
 public class Main {
     static Player player;
     static Dragon dragon;
+    private static final int SPRITE_SIZE = 40;
     static String dropMessage;
     static long dropMessageUntil;
 
@@ -292,11 +293,20 @@ public class Main {
         timer.start();
     }
 
-    public static void attack(JPanel pane, Player player) {
+ public static void attack(JPanel pane, Player player) {
         Action attack = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                player.setAttacking(true);
+                pane.repaint();
                 dragon.startDamage(player);
+
+                Timer attackTimer = new Timer(180, evt -> {
+                    player.setAttacking(false);
+                    pane.repaint();
+                });
+                attackTimer.setRepeats(false);
+                attackTimer.start();
             }
         };
         pane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("SPACE"), "attack");
