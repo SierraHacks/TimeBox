@@ -99,7 +99,7 @@ public class Dragon extends NonPlayer {
     
     private void startAttack(State s, BufferedImage[] anim, Player player) {
         double dist = Math.abs(player.getX()-this.x);
-        if(dist < 50){
+        if(dist < 75){
         changeState(s, anim);
         animLock = true;
             player.takeDamage(this.attack());
@@ -108,9 +108,11 @@ public class Dragon extends NonPlayer {
     public void startDamage(Player player){
         changeState(State.HIT, this.hitFrames);
         animLock = true;
-        double dist = player.getX()-this.x;
-        Weapon w= player.getWeapon();
-        if(w!=null && dist < w.getRange() || w==null && dist < 25){
+        double dist = Math.abs(player.getX()-this.x);
+        Weapon w = player.getWeapon();
+        int effectiveRange = (w != null) ? w.getRange() : 12;
+
+        if (dist < effectiveRange) {
             this.takeDamage(player.attack());
         }
     }

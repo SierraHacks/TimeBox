@@ -23,30 +23,26 @@ public class Weapon {
         return this.name;
     }
 public static void initWeapons() {
-    Weapon sword = new Weapon(
-        new HashMap<>(Map.of("Wood", 2, "Steel", 5)),
-        10,
-        "Sword",
-        5
-    );
-
     Weapon warHammer = new Weapon(
         new HashMap<>(Map.of("Wood", 2, "Steel", 10)),
         5,
         "War Hammer",
-        3
+        10
+    );
+
+    Weapon sword = new Weapon(
+        new HashMap<>(Map.of("Wood", 2, "Steel", 5)),
+        10,
+        "Sword",
+        18
     );
 
     Weapon poleaxe = new Weapon(
         new HashMap<>(Map.of("Wood", 5, "Steel", 15)),
         25,
         "Poleaxe",
-        10
+        28
     );
-    Weapon.weaponList.add(sword);
-    Weapon.weaponList.add(warHammer);
-    Weapon.weaponList.add(poleaxe);
-
 }
 
     public Map<String, Integer> getRecipe() {
