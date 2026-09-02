@@ -441,8 +441,6 @@ public class Main {
                 Weapon.initWeapons();
                 player = new Player(100, 60, 560);
                 dragon = new Dragon("Boss", 150, 10, 1050, 550);
-                player.updateInventory("Wood", 2);
-                player.updateInventory("Steel", 5);
                 createAndShowGUI();
             }
         });
